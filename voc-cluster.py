@@ -49,7 +49,7 @@ for call in calls[::-1]:
 
     filename = "call-%04d.parsed" % call_id
     open(filename, "w").writelines(samples)
-    is_voice = os.system('check-sample ' + filename) == 0
+    is_voice = os.system('./check-sample ' + filename) == 0
 
     if not is_voice:
         os.system('mv ' + filename + ' fail-%d.parsed' % call_id)

@@ -1,0 +1,10 @@
+iridium-extractor -D 4 /usr/src/gr-iridium/examples/hackrf.conf > ~/output-$( date '+%F_%H-%M-%S' ).bits
+./iridium-parser.py output.bits > output.parsed
+./voc-cluster.py output.parsed
+rm fail*
+ls -l call*
+./stats-voc.py call-<num>.parsed
+ 
+
+grep 'pos=' ~/output.parsed > ~/loc.data
+awk -F' ' '/PAGE/ { print $13, $12, $18, $19, $20, $21  }' loc.data | tr '()' ' ' | tr '/' ',' | tr '=' ' ' | tr ':,' ' '| awk -F' ' '{print $2, $4, $5, $8, $13 }' > iridium.csv && sed -i '1s/^/alt lat lon tmsi1 tmsi2 \n/' iridium.csv
