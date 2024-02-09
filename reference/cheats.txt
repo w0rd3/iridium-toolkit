@@ -8,3 +8,11 @@ ls -l call*
 
 grep 'pos=' ~/output.parsed > ~/loc.data
 awk -F' ' '/PAGE/ { print $13, $12, $18, $19, $20, $21  }' loc.data | tr '()' ' ' | tr '/' ',' | tr '=' ' ' | tr ':,' ' '| awk -F' ' '{print $2, $4, $5, $8, $13 }' > iridium.csv && sed -i '1s/^/alt lat lon tmsi1 tmsi2 \n/' iridium.csv
+
+=== Following cheats courtesy of Rob VK8FOES ===
+
+# Phone Number Extraction
+tshark -r /path/to/pcap.pcap -Y gsmtap -T fields \-e gsm_a_dtap.clg_party_bcd_num | grep -v -e '^$'
+
+# SMS Extraction
+tshark -r /path/to/pcap.pcap -Y gsm_sms -T fields \-e gsm_sms.sms_text
