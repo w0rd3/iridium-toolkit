@@ -3,6 +3,18 @@
 
 import sys
 import os
+# import getopt
+
+# options = "h:"
+
+# try:
+#     arguments, values = getopt.getopt(options)
+#     for currentArgument, currentValue in arguments:
+#         if currentArgument in ("-h"):
+#             print ("Usage: ./voc-cluster.py [input file] [path to output]")
+# except getopt.error as err:
+#     # output error, and return with an error code
+#     print (str(err))
 
 class Frame:
     def __init__(self, f, f_alt, ts, line):
@@ -10,7 +22,14 @@ class Frame:
         self.ts = ts
         self.line = line
         self.f_alt = f_alt
+def clean():
+    path=sys.argv[2]
+    os.system('rm ' + path + '/fail-*')
 
+# def export():
+#     path=sys.argv[2]
+#     os.system('ls ' + path + '/call-*.parsed > ' + path + '/index.txt')
+#     os.system('for arg in $(< ' + path + '/index.txt); do ~/iridium-toolkit/play-iridium-ambe "$arg"; done')
 calls = []
 
 for line in open(sys.argv[1]):
@@ -46,12 +65,16 @@ for call in calls[::-1]:
         continue
 
     samples = [frame.line for frame in call]
-
-    filename = "./data/call-%04d.parsed" % call_id
+    path = sys.argv[2]
+    filename = path + '/call-%04d.parsed' % call_id
     open(filename, "w").writelines(samples)
     is_voice = os.system('./check-sample ' + filename) == 0
 
     if not is_voice:
-        os.system('mv ' + filename + ' fail-%d.parsed' % call_id)
+        os.system('mv ' + filename + ' ' + path + '/fail-%d.parsed' % call_id)
     call_id += 1
 
+    if is_voice:
+        os.system('./play-iridium-ambe ' + filename)
+        
+clean()

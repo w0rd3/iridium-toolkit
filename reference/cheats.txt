@@ -13,7 +13,6 @@ rm fail*
 ls -d $PWD/call-*.parsed > index.txt
 
 # Extract all audio (run from iridium-toolkit/)
-for arg in $(< data/index.txt); do ./play-iridium-ambe "$arg"; done
 
 # Pull SAT locations
 grep 'pos=' /path/to/output.parsed > ~/loc.data
