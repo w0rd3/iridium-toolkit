@@ -47,7 +47,7 @@ for call in calls[::-1]:
 
     samples = [frame.line for frame in call]
 
-    filename = "call-%04d.parsed" % call_id
+    filename = "./data/call-%04d.parsed" % call_id
     open(filename, "w").writelines(samples)
     is_voice = os.system('./check-sample ' + filename) == 0
 

@@ -1,5 +1,8 @@
 #!/bin/sh
-/usr/src/iridium-toolkit/bits_to_dfs.py $1 /tmp/voice.dfs
-#ambe -w /tmp/voice.dfs
-/usr/src/iridium-toolkit/ir77_ambe_decode /tmp/voice.dfs /tmp/voice.wav
-mplayer -msglevel all=3:statusline=5 -nolirc /tmp/voice.wav
+PARSED=$1
+CALL="${PARSED%%.*}.wav"
+echo "$CALL"
+./bits_to_dfs.py $1 /tmp/voice.dfs
+# #ambe -w /tmp/voice.dfs
+./ir77_ambe_decode /tmp/voice.dfs $CALL
+# # mplayer -msglevel all=3:statusline=5 -nolirc /tmp/$($1).wav

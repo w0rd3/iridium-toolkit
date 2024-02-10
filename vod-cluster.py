@@ -13,7 +13,8 @@ class Frame:
 
 calls = []
 
-for line in open(sys.argv[1]):
+# for line in open(sys.argv[1]):
+for line in open(sys("./data/2024-02-09/output-2024-02-09.parsed")):
     if 'VOD: ' in line:
         sl = line.split()
         ts = float(sl[2])/1000. # seconds
@@ -43,10 +44,10 @@ for call in calls[::-1]:
 
     samples = [frame.line for frame in call]
 
-    filename = "call-%04d.parsed" % call_id
+    filename = "./data/call-%04d.parsed" % call_id
     open(filename, "w").writelines(samples)
 
-    is_voice = os.system('check-sample-vod ' + filename) == 0
+    is_voice = os.system('./check-sample-vod ' + filename) == 0
 
     if not is_voice:
         os.system('mv ' + filename + ' fail-%d.parsed' % call_id)

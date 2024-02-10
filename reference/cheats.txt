@@ -1,18 +1,29 @@
-iridium-extractor -D 4 /usr/src/gr-iridium/examples/hackrf.conf > ~/output-$( date '+%F_%H-%M-%S' ).bits
-./iridium-parser.py output.bits > output.parsed
-./voc-cluster.py output.parsed
-rm fail*
-ls -l call*
-./stats-voc.py call-<num>.parsed
- 
 
-grep 'pos=' ~/output.parsed > ~/loc.data
+# Capture via hackrf, save with todays date/hour/min/sec
+iridium-extractor -D 4 /usr/src/gr-iridium/examples/hackrf.conf > ~/output-$( date '+%F_%H-%M-%S' ).bits
+
+# Parse for analysis
+./iridium-parser.py output.bits > data/output.parsed
+
+# Cluster for audio extraction
+./voc-cluster.py data/output.parsed
+rm fail*
+
+# Create index of viable audio, from within data folder
+ls -d $PWD/call-*.parsed > index.txt
+
+# Extract all audio (run from iridium-toolkit/)
+for arg in $(< data/index.txt); do ./play-iridium-ambe "$arg"; done
+
+# Pull SAT locations
+grep 'pos=' /path/to/output.parsed > ~/loc.data
 awk -F' ' '/PAGE/ { print $13, $12, $18, $19, $20, $21  }' loc.data | tr '()' ' ' | tr '/' ',' | tr '=' ' ' | tr ':,' ' '| awk -F' ' '{print $2, $4, $5, $8, $13 }' > iridium.csv && sed -i '1s/^/alt lat lon tmsi1 tmsi2 \n/' iridium.csv
 
 === Following cheats courtesy of Rob VK8FOES ===
 
 # Phone Number Extraction
-tshark -r /path/to/pcap.pcap -Y gsmtap -T fields \-e gsm_a_dtap.clg_party_bcd_num | grep -v -e '^$'
+tshark -r /path/to/pcap.pcap -Y gsmtap -T fields \-e gsm_a.dtap.clg_party_bcd_num | grep -v -e '^$'
 
 # SMS Extraction
 tshark -r /path/to/pcap.pcap -Y gsm_sms -T fields \-e gsm_sms.sms_text
+
