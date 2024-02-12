@@ -1,5 +1,7 @@
 # Simple toolkit to decode Iridium signals
 
+NOTE: This is a fork of the wonderful project from the folks at MUCCC, tuned for post-processing collected data. Until I get around to updating the README, please see the wiki (https://github.com/w0rd3/iridium-toolkit/wiki) for instructions for use with changed and added tools!
+
 ### Requisites
 
  * Python (3.7+) (may work with older 3.x, but this is untested)
